@@ -179,7 +179,7 @@ namespace CSV
             {
                 contentRow.AppendDelimitter(Configuration.GetDelimiter());
                 var field = fields.FirstOrDefault(a => a.Name == map.GetProperty().Name);
-                contentRow.Append(field.GetValue(element));
+                contentRow.Append(ValidateCommas(field.GetValue(element)));
             }
             return contentRow.ToString();
         }
@@ -187,6 +187,16 @@ namespace CSV
         private string RowNoMapper(T element)
         {
             return "";
+        }
+        
+        private object ValidateCommas(object content)
+        {
+            if (content !=null && content.ToString().Contains(","))
+            {
+                return $"\"{content}\"";
+            }
+
+            return content;
         }
 
         public IWriterMap<T> Map(Expression<Func<T, dynamic>> origin)
